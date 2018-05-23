@@ -99,6 +99,8 @@ public class EsperantoStemmer {
 	}
 
 	protected void initStemmerExceptions() {
+		stemmerExceptions = new HashSet<String>();
+		
 		// The article
 		stemmerExceptions.add("la");
 		// Conjunctions
@@ -233,6 +235,8 @@ public class EsperantoStemmer {
 	}
 
 	protected void initNumerals() {
+		basicNumerals = new HashSet<String>();
+		
 		basicNumerals.add("unu");
 		basicNumerals.add("du");
 		basicNumerals.add("tri");
@@ -298,7 +302,7 @@ public class EsperantoStemmer {
 		// Esperanto uses the Latin Alphabet + ĉ, ĝ, ĥ, ĵ, ŝ, ŭ but does not use q, w,
 		// x, y
 		// Sourced from https://en.wikipedia.org/wiki/Esperanto_grammar
-		Matcher matcher = Pattern.compile("\\b[a-zA-Zĉĝĥĵŝŭ&&[^qwxyQWXY]]\\b").matcher(line);
+		Matcher matcher = Pattern.compile("\\b[a-zA-Zĉĝĥĵŝŭ&&[^qwxyQWXY]]+\\b").matcher(line);
 		StringBuffer sb = new StringBuffer();
 
 		boolean hasWords = matcher.find();
@@ -313,7 +317,7 @@ public class EsperantoStemmer {
 			startPos = matcher.end();
 			hasWords = matcher.find();
 		}
-
+		
 		return sb.toString();
 	}
 
@@ -360,7 +364,7 @@ public class EsperantoStemmer {
 			}
 
 			EsperantoStemmer stemmer = new EsperantoStemmer();
-
+			
 			stemmer.stemFile(args[0], args[1]);
 
 			System.out.println("Stemming complete.");
