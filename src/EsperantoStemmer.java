@@ -100,7 +100,7 @@ public class EsperantoStemmer {
 
 	protected void initStemmerExceptions() {
 		stemmerExceptions = new HashSet<String>();
-		
+
 		// The article
 		stemmerExceptions.add("la");
 		// Conjunctions
@@ -232,11 +232,14 @@ public class EsperantoStemmer {
 		stemmerExceptions.add("dekkvin");
 		stemmerExceptions.add("dektri");
 		stemmerExceptions.add("dekunu");
+		// Dates
+		stemmerExceptions.add("a");
+		stemmerExceptions.add("an");
 	}
 
 	protected void initNumerals() {
 		basicNumerals = new HashSet<String>();
-		
+
 		basicNumerals.add("unu");
 		basicNumerals.add("du");
 		basicNumerals.add("tri");
@@ -317,7 +320,7 @@ public class EsperantoStemmer {
 			startPos = matcher.end();
 			hasWords = matcher.find();
 		}
-		
+
 		return sb.toString();
 	}
 
@@ -364,7 +367,7 @@ public class EsperantoStemmer {
 			}
 
 			EsperantoStemmer stemmer = new EsperantoStemmer();
-			
+
 			stemmer.stemFile(args[0], args[1]);
 
 			System.out.println("Stemming complete.");
