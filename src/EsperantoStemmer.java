@@ -16,6 +16,7 @@ public class EsperantoStemmer {
 	protected HashSet<String> basicNumerals;
 
 	protected int maxSuffixLength;
+	protected int minStemLength = 2;
 
 	public EsperantoStemmer() {
 		initStemmerRules();
@@ -115,6 +116,7 @@ public class EsperantoStemmer {
 		stemmerExceptions.add("plus");
 		stemmerExceptions.add("se");
 		stemmerExceptions.add("ĉu");
+		stemmerExceptions.add("mus");
 		// Interjections
 		stemmerExceptions.add("aha");
 		stemmerExceptions.add("bis");
@@ -200,6 +202,7 @@ public class EsperantoStemmer {
 		stemmerExceptions.add("ŝia");
 		stemmerExceptions.add("tia");
 		stemmerExceptions.add("via");
+		stemmerExceptions.add("ein");
 		// Prepositions
 		stemmerExceptions.add("anstatau");
 		stemmerExceptions.add("antau");
@@ -284,18 +287,23 @@ public class EsperantoStemmer {
 		}
 
 		// All others
-		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))) {
+		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))
+				|| (stemmerRules.containsKey(suffix)
+						&& (word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset) < minStemLength)) {
 			suffix = suffix.substring(1);
 		}
-
-		if (suffix.equals("")) {
-			return word;
+		
+		int stemLength = 0;
+		
+		if (!suffix.equals("")) {
+			stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
 		}
 
-		int stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
-
-		if (stemLength == 0) {
-			return word;
+		if (stemLength < minStemLength) {
+			if (pluralDirectOffset == word.length()) {
+				return word;
+			}
+			return word.substring(0, word.length() - pluralDirectOffset);
 		}
 
 		return word.substring(0, stemLength);
