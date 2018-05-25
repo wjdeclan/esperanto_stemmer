@@ -320,6 +320,8 @@ public class EsperantoStemmer {
 			startPos = matcher.end();
 			hasWords = matcher.find();
 		}
+		
+		sb.append(line.substring(startPos));
 
 		return sb.toString();
 	}
