@@ -203,6 +203,19 @@ public class EsperantoStemmer {
 		stemmerExceptions.add("tia");
 		stemmerExceptions.add("via");
 		stemmerExceptions.add("ein");
+		stemmerExceptions.add("plej");
+		stemmerExceptions.add("pli");
+		stemmerExceptions.add("plu");
+		stemmerExceptions.add("tion");
+		stemmerExceptions.add("tiajn");
+		stemmerExceptions.add("tiaj");
+		stemmerExceptions.add("tian");
+		stemmerExceptions.add("tien");
+		stemmerExceptions.add("tiun");
+		stemmerExceptions.add("tiuj");
+		stemmerExceptions.add("tiujn");
+		stemmerExceptions.add("tie");
+		stemmerExceptions.add("tian");
 		// Prepositions
 		stemmerExceptions.add("anstatau");
 		stemmerExceptions.add("antau");
