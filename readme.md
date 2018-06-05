@@ -1,4 +1,9 @@
-=======
+## Esperanto Stemmer
+#### Declan Whitford Jones
+
+A stemmer for Esperanto
+
+---
 
    Copyright 2018 Declan Whitford Jones
 
@@ -14,4 +19,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-=======
+---
