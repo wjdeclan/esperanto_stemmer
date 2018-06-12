@@ -60,7 +60,7 @@ public class EsperantoStemmer {
 		stemmerRules.put("is", "is");
 		stemmerRules.put("as", "as");
 		stemmerRules.put("os", "os");
-		// Voicing
+		// Voice
 		stemmerRules.put("inta", "inta");
 		stemmerRules.put("anta", "anta");
 		stemmerRules.put("onta", "onta");
