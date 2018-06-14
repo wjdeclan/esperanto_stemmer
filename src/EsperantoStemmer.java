@@ -113,6 +113,7 @@ public class EsperantoStemmer {
 		stemmerRules.put("oto", "oto");
 		// -o, -oj, -on, -ojn
 		stemmerRules.put("-o", "-o");
+		stemmerRules.put("-a", "-a");
 	}
 
 	protected void initMaxSuffixLength() {
