@@ -347,12 +347,11 @@ public class EsperantoStemmer {
 
 		if (!suffix.equals("")) {
 			stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
+			if (suffix.charAt(0) == '-' && suffix.length() + pluralDirectOffset < word.length()) {
+				return word.substring(0, stemLength);
+			}
 		}
 		
-		if (suffix.charAt(0) == '-' && suffix.length() + pluralDirectOffset < word.length()) {
-			return word.substring(0, stemLength);
-		}
-
 		if (stemLength < localMinStemLength) {
 			return word;
 		}
@@ -364,7 +363,7 @@ public class EsperantoStemmer {
 		// Esperanto uses the Latin Alphabet + ĉ, ĝ, ĥ, ĵ, ŝ, ŭ but does not use q, w,
 		// x, y
 		// Sourced from https://en.wikipedia.org/wiki/Esperanto_grammar
-		Matcher matcher = Pattern.compile("\\b[a-zA-ZĉĝĥĵŝŭĈĜĤĴŜŬ&&[^qwxyQWXY]]+\\b").matcher(line);
+		Matcher matcher = Pattern.compile("\\b[a-zA-ZĉĝĥĵŝŭĈĜĤĴŜŬ[-]&&[^qwxyQWXY]]+\\b").matcher(line);
 		StringBuffer sb = new StringBuffer();
 
 		boolean hasWords = matcher.find();
