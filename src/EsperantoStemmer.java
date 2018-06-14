@@ -111,7 +111,8 @@ public class EsperantoStemmer {
 		stemmerRules.put("ito", "ito");
 		stemmerRules.put("ato", "ato");
 		stemmerRules.put("oto", "oto");
-
+		// -o, -oj, -on, -ojn
+		stemmerRules.put("-o", "-o");
 	}
 
 	protected void initMaxSuffixLength() {
@@ -337,7 +338,7 @@ public class EsperantoStemmer {
 		// All others
 		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))
 				|| (stemmerRules.containsKey(suffix) && (word.length() - stemmerRules.get(suffix).length()
-						- pluralDirectOffset) < localMinStemLength)) {
+						- pluralDirectOffset) < localMinStemLength && suffix.charAt(0) != '-')) {
 			suffix = suffix.substring(1);
 		}
 
@@ -346,17 +347,15 @@ public class EsperantoStemmer {
 		if (!suffix.equals("")) {
 			stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
 		}
+		
+		if (suffix.charAt(0) == '-' && suffix.length() + pluralDirectOffset < word.length()) {
+			return word.substring(0, stemLength);
+		}
 
 		if (stemLength < localMinStemLength) {
 			return word;
 		}
-
-		// Trim off trailing hyphens in the case of words like lo-ojn, in which ojn gets
-		// removed
-		if (word.charAt(stemLength - 1) == '-') {
-			stemLength -= 1;
-		}
-
+		
 		return word.substring(0, stemLength);
 	}
 
@@ -364,7 +363,7 @@ public class EsperantoStemmer {
 		// Esperanto uses the Latin Alphabet + ĉ, ĝ, ĥ, ĵ, ŝ, ŭ but does not use q, w,
 		// x, y
 		// Sourced from https://en.wikipedia.org/wiki/Esperanto_grammar
-		Matcher matcher = Pattern.compile("\\b[a-zA-Zĉĝĥĵŝŭ&&[^qwxyQWXY]]+\\b").matcher(line);
+		Matcher matcher = Pattern.compile("\\b[a-zA-ZĉĝĥĵŝŭĈĜĤĴŜŬ&&[^qwxyQWXY]]+\\b").matcher(line);
 		StringBuffer sb = new StringBuffer();
 
 		boolean hasWords = matcher.find();
