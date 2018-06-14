@@ -1,3 +1,4 @@
+
 /*
  *    Copyright 2018 Declan Whitford Jones
  *
@@ -19,9 +20,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +36,9 @@ public class EsperantoStemmer {
 
 	protected int maxSuffixLength;
 	protected int minStemLength = 2;
+
+	private final Set<Character> vowels = new HashSet<Character>(
+			Arrays.asList(new Character[] { 'a', 'e', 'i', 'o', 'u' }));
 
 	public EsperantoStemmer() {
 		initStemmerRules();
@@ -283,8 +289,21 @@ public class EsperantoStemmer {
 		basicNumerals.add("naŭ");
 	}
 
+	private int firstVowelPos(String word) {
+		for (int i = 0; i < word.length(); i++) {
+			if (vowels.contains(word.charAt(i))) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
 	public String stemWord(String word) {
 		String suffix = word.toLowerCase();
+
+		int firstVowel = firstVowelPos(suffix);
+		int localMinStemLength = (minStemLength > (firstVowel + 1)) ? minStemLength : (firstVowel + 1);
 
 		int numeralIndex = -1;
 
@@ -317,22 +336,25 @@ public class EsperantoStemmer {
 
 		// All others
 		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))
-				|| (stemmerRules.containsKey(suffix)
-						&& (word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset) < minStemLength)) {
+				|| (stemmerRules.containsKey(suffix) && (word.length() - stemmerRules.get(suffix).length()
+						- pluralDirectOffset) < localMinStemLength)) {
 			suffix = suffix.substring(1);
 		}
-		
+
 		int stemLength = 0;
-		
+
 		if (!suffix.equals("")) {
 			stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
 		}
 
-		if (stemLength < minStemLength) {
-			if (pluralDirectOffset == word.length()) {
-				return word;
-			}
-			return word.substring(0, word.length() - pluralDirectOffset);
+		if (stemLength < localMinStemLength) {
+			return word;
+		}
+
+		// Trim off trailing hyphens in the case of words like lo-ojn, in which ojn gets
+		// removed
+		if (word.charAt(stemLength - 1) == '-') {
+			stemLength -= 1;
 		}
 
 		return word.substring(0, stemLength);
@@ -357,7 +379,7 @@ public class EsperantoStemmer {
 			startPos = matcher.end();
 			hasWords = matcher.find();
 		}
-		
+
 		sb.append(line.substring(startPos));
 
 		return sb.toString();
