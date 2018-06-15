@@ -107,6 +107,8 @@ public class EsperantoStemmer {
 		// -o, -oj, -on, -ojn
 		stemmerRules.put("-o", "-o");
 		stemmerRules.put("-a", "-a");
+		stemmerRules.put("-e", "-e");
+		stemmerRules.put("-", "-");
 	}
 
 	protected void initMaxSuffixLength() {
@@ -295,7 +297,8 @@ public class EsperantoStemmer {
 	}
 
 	public String stemWord(String word) {
-		String suffix = word.toLowerCase();
+		word = word.toLowerCase();
+		String suffix = word;
 
 		int firstVowel = firstVowelPos(suffix);
 		int localMinStemLength = (minStemLength > (firstVowel + 1)) ? minStemLength : (firstVowel + 1);
@@ -357,7 +360,7 @@ public class EsperantoStemmer {
 		// Esperanto uses the Latin Alphabet + ĉ, ĝ, ĥ, ĵ, ŝ, ŭ but does not use q, w,
 		// x, y
 		// Sourced from https://en.wikipedia.org/wiki/Esperanto_grammar
-		Matcher matcher = Pattern.compile("\\b[a-zA-ZĉĝĥĵŝŭĈĜĤĴŜŬ[-]&&[^qwxyQWXY]]+\\b").matcher(line);
+		Matcher matcher = Pattern.compile("\\b[0-9a-zA-ZĉĝĥĵŝŭĈĜĤĴŜŬ[-]&&[^qwxyQWXY]]+\\b").matcher(line);
 		StringBuffer sb = new StringBuffer();
 
 		boolean hasWords = matcher.find();
