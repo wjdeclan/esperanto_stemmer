@@ -1,18 +1,11 @@
-
 /*
- *    Copyright 2018 Declan Whitford Jones
+ *	Copyright (C) 2018 Declan Whitford Jones
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *	Liscensed under GPL 3
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *	Structure copied from Vuk Batanović's SCStemmer
+ *	https://github.com/vukbatanovic/SCStemmers/tree/master/src/weka/core/stemmers
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -338,8 +331,9 @@ public class EsperantoStemmer {
 
 		// All others
 		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))
-				|| (stemmerRules.containsKey(suffix) && (word.length() - stemmerRules.get(suffix).length()
-						- pluralDirectOffset) < localMinStemLength && suffix.charAt(0) != '-')) {
+				|| (stemmerRules.containsKey(suffix)
+						&& (word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset) < localMinStemLength
+						&& suffix.charAt(0) != '-')) {
 			suffix = suffix.substring(1);
 		}
 
@@ -351,11 +345,11 @@ public class EsperantoStemmer {
 				return word.substring(0, stemLength);
 			}
 		}
-		
+
 		if (stemLength < localMinStemLength) {
 			return word;
 		}
-		
+
 		return word.substring(0, stemLength);
 	}
 
