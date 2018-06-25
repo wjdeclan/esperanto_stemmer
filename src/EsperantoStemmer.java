@@ -1,3 +1,4 @@
+
 /*
  *	Copyright (C) 2018 Declan Whitford Jones
  *
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 public class EsperantoStemmer {
 
 	protected HashMap<String, String> stemmerRules;
+	protected HashSet<String> pluralDirectChecks;
 	protected HashSet<String> stemmerExceptions;
 	protected HashSet<String> basicNumerals;
 
@@ -36,6 +38,7 @@ public class EsperantoStemmer {
 	public EsperantoStemmer() {
 		initStemmerRules();
 		initMaxSuffixLength();
+		initPluralDirectChecks();
 		initStemmerExceptions();
 		initNumerals();
 	}
@@ -116,6 +119,27 @@ public class EsperantoStemmer {
 			if (suffix.length() > maxSuffixLength)
 				maxSuffixLength = suffix.length();
 		}
+	}
+
+	protected void initPluralDirectChecks() {
+		pluralDirectChecks = new HashSet<String>();
+
+		pluralDirectChecks.add("ci");
+		pluralDirectChecks.add("ĝi");
+		pluralDirectChecks.add("gi");
+		pluralDirectChecks.add("iŝi");
+		pluralDirectChecks.add("li");
+		pluralDirectChecks.add("mi");
+		pluralDirectChecks.add("ni");
+		pluralDirectChecks.add("ri");
+		pluralDirectChecks.add("ŝi");
+		pluralDirectChecks.add("si");
+		pluralDirectChecks.add("ŝli");
+		pluralDirectChecks.add("vi");
+
+		pluralDirectChecks.add("ia");
+		pluralDirectChecks.add("io");
+		pluralDirectChecks.add("iu");
 	}
 
 	protected void initStemmerExceptions() {
@@ -269,6 +293,12 @@ public class EsperantoStemmer {
 		if (suffix.endsWith("j")) {
 			pluralDirectOffset += 1;
 			suffix = suffix.substring(0, suffix.length() - 1);
+		}
+
+		if (pluralDirectOffset > 0
+				&& (pluralDirectChecks.contains(word.substring(0, word.length() - pluralDirectOffset))
+						|| stemmerExceptions.contains(word.substring(0, word.length() - pluralDirectOffset)))) {
+			return word.substring(0, word.length() - pluralDirectOffset);
 		}
 
 		// All others
