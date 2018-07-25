@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class EsperantoStemmer {
 
-	protected HashMap<String, String> stemmerRules;
+	protected HashSet<String> stemmerRules;
 	protected HashSet<String> pluralDirectChecks;
 	protected HashSet<String> stemmerExceptions;
 	protected HashSet<String> basicNumerals;
@@ -46,76 +46,76 @@ public class EsperantoStemmer {
 	// Rules are sourced from https://en.wikipedia.org/wiki/Esperanto_grammar
 	// Rules are of the form <Suffix, Removed Suffix>
 	protected void initStemmerRules() {
-		stemmerRules = new LinkedHashMap<String, String>();
+		stemmerRules = new HashSet<String>();
 
 		// Part of speech suffixes
-		stemmerRules.put("o", "o");
-		stemmerRules.put("a", "a");
-		stemmerRules.put("e", "e");
-		stemmerRules.put("i", "i");
+		stemmerRules.add("o");
+		stemmerRules.add("a");
+		stemmerRules.add("e");
+		stemmerRules.add("i");
 
 		// Verb conjugations
 		// Mood
-		stemmerRules.put("u", "u");
-		stemmerRules.put("us", "us");
+		stemmerRules.add("u");
+		stemmerRules.add("us");
 		// Indicative
-		stemmerRules.put("is", "is");
-		stemmerRules.put("as", "as");
-		stemmerRules.put("os", "os");
+		stemmerRules.add("is");
+		stemmerRules.add("as");
+		stemmerRules.add("os");
 		// Voice
-		stemmerRules.put("inta", "inta");
-		stemmerRules.put("anta", "anta");
-		stemmerRules.put("onta", "onta");
-		stemmerRules.put("ita", "ita");
-		stemmerRules.put("ata", "ata");
-		stemmerRules.put("ota", "ota");
+		stemmerRules.add("inta");
+		stemmerRules.add("anta");
+		stemmerRules.add("onta");
+		stemmerRules.add("ita");
+		stemmerRules.add("ata");
+		stemmerRules.add("ota");
 		// Compound Tense
-		stemmerRules.put("intas", "intas");
-		stemmerRules.put("antas", "antas");
-		stemmerRules.put("ontas", "ontas");
-		stemmerRules.put("itas", "itas");
-		stemmerRules.put("atas", "atas");
-		stemmerRules.put("otas", "otas");
-		stemmerRules.put("intis", "intis");
-		stemmerRules.put("antis", "antis");
-		stemmerRules.put("ontis", "ontis");
-		stemmerRules.put("itis", "itis");
-		stemmerRules.put("atis", "atis");
-		stemmerRules.put("otis", "otis");
-		stemmerRules.put("intos", "intos");
-		stemmerRules.put("antos", "antos");
-		stemmerRules.put("ontos", "ontos");
-		stemmerRules.put("itos", "itos");
-		stemmerRules.put("atos", "atos");
-		stemmerRules.put("otos", "otos");
-		stemmerRules.put("intus", "intus");
-		stemmerRules.put("antus", "antus");
-		stemmerRules.put("ontus", "ontus");
-		stemmerRules.put("itus", "itus");
-		stemmerRules.put("atus", "atus");
-		stemmerRules.put("otus", "otus");
+		stemmerRules.add("intas");
+		stemmerRules.add("antas");
+		stemmerRules.add("ontas");
+		stemmerRules.add("itas");
+		stemmerRules.add("atas");
+		stemmerRules.add("otas");
+		stemmerRules.add("intis");
+		stemmerRules.add("antis");
+		stemmerRules.add("ontis");
+		stemmerRules.add("itis");
+		stemmerRules.add("atis");
+		stemmerRules.add("otis");
+		stemmerRules.add("intos");
+		stemmerRules.add("antos");
+		stemmerRules.add("ontos");
+		stemmerRules.add("itos");
+		stemmerRules.add("atos");
+		stemmerRules.add("otos");
+		stemmerRules.add("intus");
+		stemmerRules.add("antus");
+		stemmerRules.add("ontus");
+		stemmerRules.add("itus");
+		stemmerRules.add("atus");
+		stemmerRules.add("otus");
 		// Nominal participles
-		stemmerRules.put("inte", "inte");
-		stemmerRules.put("ante", "ante");
-		stemmerRules.put("onte", "onte");
-		stemmerRules.put("ite", "ite");
-		stemmerRules.put("ate", "ate");
-		stemmerRules.put("ote", "ote");
-		stemmerRules.put("into", "into");
-		stemmerRules.put("anto", "anto");
-		stemmerRules.put("onto", "onto");
-		stemmerRules.put("ito", "ito");
-		stemmerRules.put("ato", "ato");
-		stemmerRules.put("oto", "oto");
+		stemmerRules.add("inte");
+		stemmerRules.add("ante");
+		stemmerRules.add("onte");
+		stemmerRules.add("ite");
+		stemmerRules.add("ate");
+		stemmerRules.add("ote");
+		stemmerRules.add("into");
+		stemmerRules.add("anto");
+		stemmerRules.add("onto");
+		stemmerRules.add("ito");
+		stemmerRules.add("ato");
+		stemmerRules.add("oto");
 		// -o, -oj, -on, -ojn
-		stemmerRules.put("-o", "-o");
-		stemmerRules.put("-a", "-a");
-		stemmerRules.put("-e", "-e");
-		stemmerRules.put("-", "-");
+		stemmerRules.add("-o");
+		stemmerRules.add("-a");
+		stemmerRules.add("-e");
+		stemmerRules.add("-");
 	}
 
 	protected void initMaxSuffixLength() {
-		for (String suffix : stemmerRules.keySet()) {
+		for (String suffix : stemmerRules) {
 			if (suffix.length() > maxSuffixLength)
 				maxSuffixLength = suffix.length();
 		}
@@ -233,6 +233,19 @@ public class EsperantoStemmer {
 		// Dates
 		stemmerExceptions.add("a");
 		stemmerExceptions.add("an");
+		// Roman Numerals
+		stemmerExceptions.add("i");
+		stemmerExceptions.add("ii");
+		stemmerExceptions.add("iii");
+		stemmerExceptions.add("vi");
+		stemmerExceptions.add("vii");
+		stemmerExceptions.add("viii");
+		stemmerExceptions.add("xi");
+		stemmerExceptions.add("xii");
+		stemmerExceptions.add("xiii");
+		stemmerExceptions.add("xvi");
+		stemmerExceptions.add("xvii");
+		stemmerExceptions.add("xviii");
 	}
 
 	protected void initNumerals() {
@@ -302,9 +315,9 @@ public class EsperantoStemmer {
 		}
 
 		// All others
-		while (suffix.length() > maxSuffixLength || (!stemmerRules.containsKey(suffix) && !suffix.equals(""))
-				|| (stemmerRules.containsKey(suffix)
-						&& (word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset) < localMinStemLength
+		while (suffix.length() > maxSuffixLength || (!stemmerRules.contains(suffix) && !suffix.equals(""))
+				|| (stemmerRules.contains(suffix)
+						&& (word.length() - suffix.length() - pluralDirectOffset) < localMinStemLength
 						&& suffix.charAt(0) != '-')) {
 			suffix = suffix.substring(1);
 		}
@@ -312,7 +325,7 @@ public class EsperantoStemmer {
 		int stemLength = 0;
 
 		if (!suffix.equals("")) {
-			stemLength = word.length() - stemmerRules.get(suffix).length() - pluralDirectOffset;
+			stemLength = word.length() - suffix.length() - pluralDirectOffset;
 			if (suffix.charAt(0) == '-' && suffix.length() + pluralDirectOffset < word.length()) {
 				return word.substring(0, stemLength);
 			}
