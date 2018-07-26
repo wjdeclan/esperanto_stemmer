@@ -314,11 +314,27 @@ public class EsperantoStemmer {
 			return word.substring(0, word.length() - pluralDirectOffset);
 		}
 
+		// Trim to max plausible suffix length while maintaining stem
+		int skipOver = 0;
+		// Allow negative numbers for proper ordering
+		int maxSuffix = suffix.length() - maxSuffixLength;
+		int lastDash = suffix.lastIndexOf('-');
+		if (lastDash > maxSuffix && lastDash >= 0) {
+			// If the max plausible suffix contains a dash, skip to the dash
+			skipOver = lastDash;
+		} else {
+			// Otherwise, take skip as much as possible
+			skipOver = Math.max(maxSuffix, localMinStemLength);
+		}
+
+		if (suffix.length() >= skipOver && skipOver >= 0) {
+			suffix = suffix.substring(skipOver);
+		}
+
 		// All others
-		while (suffix.length() > maxSuffixLength || (!stemmerRules.contains(suffix) && !suffix.equals(""))
-				|| (stemmerRules.contains(suffix)
-						&& (word.length() - suffix.length() - pluralDirectOffset) < localMinStemLength
-						&& suffix.charAt(0) != '-')) {
+		while ((!stemmerRules.contains(suffix) && !suffix.equals("")) || (stemmerRules.contains(suffix)
+				&& (word.length() - suffix.length() - pluralDirectOffset) < localMinStemLength
+				&& suffix.charAt(0) != '-')) {
 			suffix = suffix.substring(1);
 		}
 
